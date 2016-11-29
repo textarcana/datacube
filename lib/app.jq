@@ -2,15 +2,27 @@
 
 def schema:
   {
-   "timestamp": now | floor,
+   "timestamp": null,
    "event": {},
    "relationship": {}
    }
 ;
 
-def metric($event; $relationship):
-schema | .event=$event | .relationship=$relationship
+def create_record($timestamp; $event; $relationship):
+schema
+  | .timestamp=$timestamp
+  | .event=$event
+  | .relationship=$relationship
 ;
 
+def validate($timestamp; $event; $relationship):
 
-metric({foo:1}; {bar:2})
+if (($timestamp | type) != "number") then
+  error("\"\($timestamp)\" is an invalid timestamp")
+else
+  create_record($timestamp; $event; $relationship)
+end
+
+;
+
+validate(now|floor; {foo:1}; {bar:2})
