@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [ "$1" = "read" ]
+then
+    jq -f lib/read.jq $@
+
+elif [ "$1" = "write" ]
+then
+    jq -f lib/write.jq $@
+else
+    echo "Usage: `basename $0` <read|write>"
+    exit 1
+fi
