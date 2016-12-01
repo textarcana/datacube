@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
 
-event_key_store_path="/tmp/event_key_store"
-
-store_event_by_key()
-{
-    eventKey=$1
-    recordJson=$2
-
-    echo $eventKey \
-        | tr '.' '/' \
-        | xargs -I@ mkdir -p "$event_key_store_path/@"
-
-
-}
+event_key_store_path="/tmp/event_key_store/facts"
 
 dcube_write()
 {
@@ -21,16 +9,21 @@ dcube_write()
     eventValue=$2
     relationshipKey=$3
     relationshipValue=$4
+    timestamp=$5
 
-    json_document=$(
-        jq -n \
-           --argjson eventArg "{\"$eventKey\": \"$eventValue\"}" \
-           --argjson relationshipArg "{\"$3\": \"$4\"}" \
-           -f "lib/app.jq")
+    store_at_path=$(
+        echo $eventKey \
+            | tr '.' '/' \
+            | echo "$event_key_store_path/$eventKey/$timestamp")
 
-    document_hash=$(
-        echo $json_document \
-            | shasum -a 256 \
-            | cut -d' ' -f1)
+echo $store_at_path
+
+mkdir -p $store_at_path
+
+    jq --sort-keys\
+       -c -n \
+       --argjson eventArg "{\"$eventKey\": \"$eventValue\"}" \
+       --argjson relationshipArg "{\"$3\": \"$4\"}" \
+       -f "lib/app.jq" > "$store_at_path/$eventValue"
 
 }
