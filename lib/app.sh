@@ -2,13 +2,20 @@
 
 event_key_store_path="/tmp/event_key_store/facts"
 
-event_key_as_path()
+path_from_keys()
 {
-    key_as_path=$(
+    event_key=$1
+    relationship_key=$2
+
+    event_key_as_path=$(
         echo $event_key \
             | tr '.' '/')
 
-    echo "$event_key_store_path/$key_as_path"
+    relationship_as_path=$(
+        echo $relationship_key \
+            | tr ' ' '_')
+
+    echo "$event_key_store_path/$relationship_as_path/$event_key_as_path"
 }
 
 dcube_write()
@@ -20,7 +27,9 @@ dcube_write()
     relationship_value=$4
     timestamp=$5
 
-    store_at_path="$(event_key_as_path $event_key)/$timestamp"
+    store_at_path="$(path_from_keys $event_key $relationship_key)/$timestamp"
+
+echo $store_at_path
 
     mkdir -p $store_at_path
 
@@ -38,7 +47,7 @@ dcube_read()
 {
     event_key=$1
 
-    read_from_path="$(event_key_as_path $event_key)"
+    read_from_path="$(path_from_keys $event_key $relationship_key))"
 
     echo $read_from_path
 }
