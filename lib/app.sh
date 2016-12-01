@@ -16,14 +16,14 @@ dcube_write()
             | tr '.' '/' \
             | echo "$event_key_store_path/$eventKey/$timestamp")
 
-echo $store_at_path
-
-mkdir -p $store_at_path
+    mkdir -p $store_at_path
 
     jq --sort-keys\
        -c -n \
        --argjson eventArg "{\"$eventKey\": \"$eventValue\"}" \
        --argjson relationshipArg "{\"$3\": \"$4\"}" \
-       -f "lib/app.jq" > "$store_at_path/$eventValue"
+       --argjson timestampArg $timestamp \
+       -f "lib/app.jq" \
+       > "$store_at_path/$eventValue"
 
 }
