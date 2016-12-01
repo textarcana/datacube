@@ -8,6 +8,9 @@ dcube_write()
     relationshipKey=$3
     relationshipValue=$4
 
-    jq -n --argjson eventArg "{\"$eventKey\": \"$eventValue\"}" --argjson relationshipArg "{\"$3\": \"$4\"}" -f lib/app.jq
+    jq -n \
+       --argjson eventArg "{\"$eventKey\": \"$eventValue\"}" \
+       --argjson relationshipArg "{\"$3\": \"$4\"}" \
+       -f "lib/app.jq"
 
 }
