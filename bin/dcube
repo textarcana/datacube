@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-if [ "$1" = "read" ]
-then
-    jq -f lib/read.jq $@
+first_arg="$1"
+rest_of_arguments="${@:2}"
 
-elif [ "$1" = "write" ]
+source "lib/app.sh"
+
+if [ "$first_arg" = "read" ]
 then
-    jq -f lib/write.jq $@
+    dcube_read $rest_of_arguments
+
+elif [ "$first_arg" = "write" ]
+then
+    dcube_write $rest_of_arguments
 else
     echo "Usage: `basename $0` <read|write>"
     exit 1

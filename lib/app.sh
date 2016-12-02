@@ -29,7 +29,7 @@ dcube_write()
     relationship_value=$4
     timestamp=$5
 
-    jq --argjson $timestamp &> /dev/null \
+    jq -n --argjson testingArg $timestamp '$testingArg' &> /dev/null \
         || (echo "$timestamp is not a valid timestamp" \
                    && exit 1)
 
