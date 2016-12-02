@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 event_key_store_path="/tmp/event_key_store/facts"
 
 path_from_keys()
@@ -27,9 +29,13 @@ dcube_write()
     relationship_value=$4
     timestamp=$5
 
+    jq --argjson $timestamp &> /dev/null \
+        || (echo "$timestamp is not a valid timestamp" \
+                   && exit 1)
+
     store_at_path="$(path_from_keys $event_key $relationship_key)/$timestamp"
 
-echo $store_at_path
+    echo $store_at_path
 
     mkdir -p $store_at_path
 
