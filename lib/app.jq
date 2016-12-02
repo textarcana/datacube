@@ -15,6 +15,6 @@ schema
   | .relationship=$relationship
 ;
 
-create_record(now | floor;
+create_record($timestampArg;
               $eventArg;
               $relationshipArg)
